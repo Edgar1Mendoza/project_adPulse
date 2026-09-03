@@ -22,7 +22,7 @@ with open(RAW_PATH) as f:
 print(f"Rows: {len(data['data'])}")
 
 
-df = pd.DataFrame(data["data"])
+df_meta = pd.DataFrame(data["data"])
 
-print(f"Columns: {len(df.columns)}")
-print(df.dtypes)
+print(f"Columns: {len(df_meta.columns)}")
+print(df_meta.dtypes)
