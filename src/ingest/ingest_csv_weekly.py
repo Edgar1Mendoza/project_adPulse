@@ -10,8 +10,8 @@ load_dotenv()
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 SOURCE_DIR = Path(os.environ["DOWNLOADS_SOURCE_DIR"])
-SOURCE_PATH = SOURCE_DIR / "google_ads_weekly.csv"
-RAW_PATH = PROJECT_ROOT / "data" / "raw" / "csv_daily" / "google_ads_weekly.csv"
+SOURCE_PATH = SOURCE_DIR / "email_campaigns.csv"
+RAW_PATH = PROJECT_ROOT / "data" / "raw" / "csv_weekly" / "email_campaigns.csv"
 
 shutil.copy(SOURCE_PATH, RAW_PATH)
 
