@@ -4,7 +4,7 @@ from src.utils.paths import get_data_dir, get_project_root
 
 PROJECT_ROOT = get_project_root()
 
-MAPPING_PATH = PROJECT_ROOT / "data" / "raw" / "csv_mapping" / "campaign_mapping.csv"
+MAPPING_PATH = get_data_dir("raw") / "csv_mapping" / "campaign_mapping.csv"
 GOLD_PATH = get_data_dir("gold")
 
 mapping = pd.read_csv(MAPPING_PATH)

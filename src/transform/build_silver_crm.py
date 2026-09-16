@@ -4,7 +4,7 @@ from src.utils.paths import get_data_dir, get_project_root
 
 PROJECT_ROOT = get_project_root()
 
-RAW_PATH = PROJECT_ROOT / "data" / "raw" / "csv_crm" / "crm_sales.csv"
+RAW_PATH = get_data_dir("raw") / "csv_crm" / "crm_sales.csv"
 SILVER_PATH = get_data_dir("silver")
 
 df_crm = pd.read_csv(RAW_PATH)

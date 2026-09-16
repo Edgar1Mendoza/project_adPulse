@@ -4,7 +4,7 @@ from src.utils.paths import get_data_dir, get_project_root
 
 PROJECT_ROOT = get_project_root()
 
-RAW_PATH = PROJECT_ROOT / "data" / "raw" / "csv_daily" / "google_ads_weekly.csv"
+RAW_PATH = get_data_dir("raw") / "csv_daily" / "google_ads_weekly.csv"
 SILVER_PATH = get_data_dir("silver")
 
 df = pd.read_csv(RAW_PATH)
