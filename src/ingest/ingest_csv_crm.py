@@ -5,9 +5,11 @@ from pathlib import Path
 import pandas as pd
 from dotenv import load_dotenv
 
+from src.utils.paths import get_project_root
+
 load_dotenv()
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = get_project_root()
 
 SOURCE_DIR = Path(os.environ["DOWNLOADS_SOURCE_DIR"])
 SOURCE_PATH = SOURCE_DIR / "crm_ventas.csv"

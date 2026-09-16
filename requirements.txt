@@ -2,3 +2,5 @@ pandas
 duckdb
 python-dotenv
 pyarrow
+
+-e .

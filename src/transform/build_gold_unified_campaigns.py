@@ -1,8 +1,8 @@
-from pathlib import Path
-
 import pandas as pd
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+from src.utils.paths import get_project_root
+
+PROJECT_ROOT = get_project_root()
 
 MAPPING_PATH = PROJECT_ROOT / "data" / "raw" / "csv_mapping" / "campaign_mapping.csv"
 GOLD_PATH = PROJECT_ROOT / "data" / "gold"
