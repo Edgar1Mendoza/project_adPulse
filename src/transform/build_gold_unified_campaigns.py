@@ -1,11 +1,11 @@
-from pathlib import Path
-
 import pandas as pd
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+from src.utils.paths import get_data_dir, get_project_root
 
-MAPPING_PATH = PROJECT_ROOT / "data" / "raw" / "csv_mapping" / "campaign_mapping.csv"
-GOLD_PATH = PROJECT_ROOT / "data" / "gold"
+PROJECT_ROOT = get_project_root()
+
+MAPPING_PATH = get_data_dir("raw") / "csv_mapping" / "campaign_mapping.csv"
+GOLD_PATH = get_data_dir("gold")
 
 mapping = pd.read_csv(MAPPING_PATH)
 
@@ -27,7 +27,7 @@ mapping_long = mapping_long.dropna(subset=["original_campaign_name"])
 # print(mapping_long)
 
 
-SILVER_PATH = PROJECT_ROOT / "data" / "silver"
+SILVER_PATH = get_data_dir("silver")
 google = pd.read_parquet(SILVER_PATH / "google_ads_weekly.parquet")
 
 google = google.rename(
