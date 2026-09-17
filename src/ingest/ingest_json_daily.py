@@ -11,6 +11,7 @@ SOURCE_DIR = get_source_dir()
 SOURCE_PATH = SOURCE_DIR / "meta_ads.json"
 RAW_PATH = get_data_dir("raw") / "json_daily" / "meta_ads.json"
 
+RAW_PATH.parent.mkdir(parents=True, exist_ok=True)
 shutil.copy(SOURCE_PATH, RAW_PATH)
 
 with open(RAW_PATH) as f:

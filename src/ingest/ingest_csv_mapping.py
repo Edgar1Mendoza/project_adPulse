@@ -10,6 +10,7 @@ SOURCE_DIR = get_source_dir()
 SOURCE_PATH = SOURCE_DIR / "campaign_mapping.csv"
 RAW_PATH = get_data_dir("raw") / "csv_mapping" / "campaign_mapping.csv"
 
+RAW_PATH.parent.mkdir(parents=True, exist_ok=True)
 shutil.copy(SOURCE_PATH, RAW_PATH)
 
 df_mapping = pd.read_csv(RAW_PATH)

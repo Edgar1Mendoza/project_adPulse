@@ -137,5 +137,6 @@ duplicated = unified.duplicated(subset=["date", "source", "original_campaign_nam
 
 assert duplicated.sum() == 0
 
+GOLD_PATH.mkdir(parents=True, exist_ok=True)
 unified.to_parquet(GOLD_PATH / "unified_campaigns.parquet")
 print(f"saved {len(unified)} rows to {GOLD_PATH / 'unified_campaigns.parquet'}")

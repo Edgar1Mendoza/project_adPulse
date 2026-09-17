@@ -46,4 +46,5 @@ df_meta[numeric_cols] = df_meta[numeric_cols].astype(float)
 print(df_meta.head())
 print(df_meta.dtypes)
 
+SILVER_PATH.mkdir(parents=True, exist_ok=True)
 df_meta.to_parquet(SILVER_PATH / "meta_ads.parquet")

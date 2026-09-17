@@ -10,6 +10,7 @@ SOURCE_DIR = get_source_dir()
 SOURCE_PATH = SOURCE_DIR / "crm_ventas.csv"
 RAW_PATH = get_data_dir("raw") / "csv_crm" / "crm_sales.csv"
 
+RAW_PATH.parent.mkdir(parents=True, exist_ok=True)
 shutil.copy(SOURCE_PATH, RAW_PATH)
 
 df = pd.read_csv(RAW_PATH)
