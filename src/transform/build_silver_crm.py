@@ -11,6 +11,7 @@ df_crm = pd.read_csv(RAW_PATH)
 
 df_crm["sale_date"] = pd.to_datetime(df_crm["sale_date"], format="%Y-%m-%d")
 
+SILVER_PATH.mkdir(parents=True, exist_ok=True)
 df_crm.to_parquet(SILVER_PATH / "crm_sales.parquet")
 
 print(f"Rows: {len(df_crm)}")
