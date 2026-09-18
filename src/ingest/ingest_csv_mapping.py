@@ -1,8 +1,12 @@
 import shutil
+from pathlib import Path
 
 import pandas as pd
 
+from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir, get_project_root, get_source_dir
+
+logger = get_logger(Path(__file__).stem)
 
 PROJECT_ROOT = get_project_root()
 FILENAME = "campaign_mapping.csv"
@@ -16,6 +20,6 @@ shutil.copy(SOURCE_PATH, RAW_PATH)
 
 df_mapping = pd.read_csv(RAW_PATH)
 
-print(f"Rows: {len(df_mapping)}")
-print(f"Columns: {len(df_mapping.columns)}")
-print(df_mapping.dtypes)
+logger.info(f"Rows: {len(df_mapping)}")
+logger.info(f"Columns: {len(df_mapping.columns)}")
+logger.info(df_mapping.dtypes)

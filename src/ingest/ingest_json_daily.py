@@ -1,9 +1,13 @@
 import json
 import shutil
+from pathlib import Path
 
 import pandas as pd
 
+from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir, get_project_root, get_source_dir
+
+logger = get_logger(Path(__file__).stem)
 
 PROJECT_ROOT = get_project_root()
 FILENAME = "meta_ads.json"
@@ -20,10 +24,8 @@ with open(RAW_PATH) as f:
 
 records = data["data"]
 
-print(f"Rows: {len(records)}")
-
-
 df_meta = pd.DataFrame(records)
 
-print(f"Columns: {len(df_meta.columns)}")
-print(df_meta.dtypes)
+logger.info(f"Rows: {len(records)}")
+logger.info(f"Columns: {len(df_meta.columns)}")
+logger.info(df_meta.dtypes)

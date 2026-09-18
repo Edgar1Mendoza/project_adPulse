@@ -1,6 +1,11 @@
+from pathlib import Path
+
 import pandas as pd
 
+from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir, get_project_root
+
+logger = get_logger(Path(__file__).stem)
 
 PROJECT_ROOT = get_project_root()
 
@@ -41,11 +46,7 @@ mapping_long = mapping.melt(
     var_name="source",
 )
 
-
 mapping_long = mapping_long.dropna(subset=["original_campaign_name"])
-
-# print(f"Rows: {len(mapping_long)}")
-# print(mapping_long)
 
 
 SILVER_PATH = get_data_dir("silver")
@@ -57,6 +58,7 @@ google = standardize_source(
     rename_map={"campaign_name": "original_campaign_name", "cost_eur": "spend_eur"},
     defaults={"revenue_eur": 0.0},
 )
+logger.info(f"Google standardization complete. Rows: {len(google)}")
 
 
 meta = pd.read_parquet(SILVER_PATH / "meta_ads.parquet")
@@ -68,10 +70,11 @@ meta = standardize_source(
         "campaign_name": "original_campaign_name",
         "date_start": "date",
         "spend": "spend_eur",
-        "purchase": "conversions",  # Only action representing an actual conversion
+        "purchase": "conversions",
     },
     defaults={"revenue_eur": 0.0},
 )
+logger.info(f"Meta standardization complete. Rows: {len(meta)}")
 
 
 email = pd.read_parquet(SILVER_PATH / "email_campaigns.parquet")
@@ -88,12 +91,11 @@ email = standardize_source(
     },
     defaults={"impressions": 0},
 )
+logger.info(f"Email standardization complete. Rows: {len(email)}")
 
 
 facts = pd.concat([google, meta, email], ignore_index=True)
-
-print(f"Rows: {len(facts)}")
-print(facts)
+logger.info(f"General standardization and union complete. Rows: {len(facts)}")
 
 unified = facts.merge(
     mapping_long,
@@ -102,7 +104,7 @@ unified = facts.merge(
 )
 
 unified["is_mapped"] = unified["campaign_group"].notna()
-print(unified["is_mapped"].value_counts())
+logger.info(unified["is_mapped"].value_counts())
 
 unified["loaded_at"] = pd.Timestamp.now()
 
@@ -129,14 +131,16 @@ count_cols = [
     "conversions",
 ]
 unified[count_cols] = unified[count_cols].astype("Int64")
+logger.info(f"Unified data types: {unified.dtypes}")
 
-print(unified.head())
-print(unified.dtypes)
 
 duplicated = unified.duplicated(subset=["date", "source", "original_campaign_name"])
-
 assert duplicated.sum() == 0
+if duplicated.sum() > 0:
+    logger.warning(f"Found {duplicated.sum()} duplicated rows")
+else:
+    logger.info("No duplicated rows found")
 
 GOLD_PATH.mkdir(parents=True, exist_ok=True)
 unified.to_parquet(GOLD_PATH / "unified_campaigns.parquet")
-print(f"saved {len(unified)} rows to {GOLD_PATH / 'unified_campaigns.parquet'}")
+logger.info(f"Saved {len(unified)} rows to {GOLD_PATH / 'unified_campaigns.parquet'}")
