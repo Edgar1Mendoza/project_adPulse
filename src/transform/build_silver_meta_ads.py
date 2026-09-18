@@ -1,8 +1,12 @@
 import json
+from pathlib import Path
 
 import pandas as pd
 
+from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir, get_project_root
+
+logger = get_logger(Path(__file__).stem)
 
 PROJECT_ROOT = get_project_root()
 
@@ -43,8 +47,8 @@ numeric_cols = (
 )
 df_meta[numeric_cols] = df_meta[numeric_cols].astype(float)
 
-print(df_meta.head())
-print(df_meta.dtypes)
+logger.info(df_meta.head())
+logger.info(df_meta.dtypes)
 
 SILVER_PATH.mkdir(parents=True, exist_ok=True)
 df_meta.to_parquet(SILVER_PATH / "meta_ads.parquet")
