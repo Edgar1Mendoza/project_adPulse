@@ -12,7 +12,7 @@ SOURCE_PATH = SOURCE_DIR / "google_ads_weekly.csv"
 
 RAW_DIR = get_data_dir("raw") / "csv_daily"
 RAW_PATH = RAW_DIR / FILE_NAME
-RAW_DIR.parent.mkdir(parents=True, exist_ok=True)
+RAW_DIR.mkdir(parents=True, exist_ok=True)
 
 shutil.copy(SOURCE_PATH, RAW_PATH)
 
