@@ -11,6 +11,7 @@ PROJECT_ROOT = get_project_root()
 
 SILVER_PATH = get_data_dir("silver")
 GOLD_PATH = get_data_dir("gold")
+MAPPING_PATH = "campaign_mapping_long.parquet"
 
 TARGET_COLUMNS = [
     "date",
@@ -33,7 +34,7 @@ def standardize_source(df, source, rename_map, defaults=None):
     return df[TARGET_COLUMNS]
 
 
-mapping_long = pd.read_parquet(SILVER_PATH / "campaign_mapping_long.parquet")
+mapping_long = pd.read_parquet(SILVER_PATH / MAPPING_PATH)
 
 google = pd.read_parquet(SILVER_PATH / "google_ads_weekly.parquet")
 google = standardize_source(
