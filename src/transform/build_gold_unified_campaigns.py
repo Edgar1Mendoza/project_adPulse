@@ -9,7 +9,7 @@ logger = get_logger(Path(__file__).stem)
 
 PROJECT_ROOT = get_project_root()
 
-MAPPING_PATH = get_data_dir("raw") / "csv_mapping" / "campaign_mapping.csv"
+SILVER_PATH = get_data_dir("silver")
 GOLD_PATH = get_data_dir("gold")
 
 TARGET_COLUMNS = [
@@ -33,25 +33,9 @@ def standardize_source(df, source, rename_map, defaults=None):
     return df[TARGET_COLUMNS]
 
 
-mapping = pd.read_csv(MAPPING_PATH)
+mapping_long = pd.read_parquet(SILVER_PATH / "campaign_mapping_long.parquet")
 
-mapping = mapping.rename(
-    columns={"google_name": "google", "meta_name": "meta", "email_name": "email"}
-)
-
-mapping_long = mapping.melt(
-    id_vars=["campaign_group", "product_category"],
-    value_vars=["google", "meta", "email"],
-    value_name="original_campaign_name",
-    var_name="source",
-)
-
-mapping_long = mapping_long.dropna(subset=["original_campaign_name"])
-
-
-SILVER_PATH = get_data_dir("silver")
 google = pd.read_parquet(SILVER_PATH / "google_ads_weekly.parquet")
-
 google = standardize_source(
     google,
     source="google",
