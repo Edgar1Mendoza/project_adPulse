@@ -4,11 +4,9 @@ from pathlib import Path
 import pandas as pd
 
 from src.utils.logging_config import get_logger
-from src.utils.paths import get_data_dir, get_project_root, get_source_dir
+from src.utils.paths import get_data_dir, get_source_dir
 
 logger = get_logger(Path(__file__).stem)
-
-PROJECT_ROOT = get_project_root()
 
 FILE_NAME = "email_campaigns.csv"
 SOURCE_DIR = get_source_dir()

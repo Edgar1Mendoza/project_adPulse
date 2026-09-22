@@ -3,11 +3,9 @@ from pathlib import Path
 import pandas as pd
 
 from src.utils.logging_config import get_logger
-from src.utils.paths import get_data_dir, get_project_root
+from src.utils.paths import get_data_dir
 
 logger = get_logger(Path(__file__).stem)
-
-PROJECT_ROOT = get_project_root()
 
 RAW_PATH = get_data_dir("raw") / "csv_weekly" / "email_campaigns.csv"
 SILVER_PATH = get_data_dir("silver")
