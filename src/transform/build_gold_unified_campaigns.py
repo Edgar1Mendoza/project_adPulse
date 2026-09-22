@@ -91,6 +91,19 @@ unified = facts.merge(
 unified["is_mapped"] = unified["campaign_group"].notna()
 logger.info(unified["is_mapped"].value_counts())
 
+for source in unified["source"].unique():
+    sub = unified[unified["source"] == source]
+    total_spend = sub["spend_eur"].sum()
+    mapped_spend = sub.loc[sub["is_mapped"], "spend_eur"].sum()
+    pct = mapped_spend / total_spend * 100 if total_spend else 0
+    logger.info(
+        f"{source} spend: {total_spend}, mapped spend: {mapped_spend}, pct: {pct:.2f}"
+    )
+
+unmapped = unified.loc[~unified["is_mapped"], "original_campaign_name"].unique()
+if len(unmapped) > 0:
+    logger.warning(f"{len(unmapped)} unmapped campaings: {list(unmapped)}")
+
 unified["loaded_at"] = pd.Timestamp.now()
 
 unified = unified[
@@ -116,7 +129,6 @@ count_cols = [
     "conversions",
 ]
 unified[count_cols] = unified[count_cols].astype("Int64")
-logger.info(f"Unified data types: {unified.dtypes}")
 
 
 duplicated = unified.duplicated(subset=["date", "source", "original_campaign_name"])
