@@ -84,6 +84,7 @@ channel_roas = pd.DataFrame(
     }
 ).reset_index()
 
+
 executive_summary = pd.DataFrame(
     {
         "spend_eur": spend_by_source,
