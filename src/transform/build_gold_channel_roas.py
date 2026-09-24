@@ -85,7 +85,38 @@ channel_roas = pd.DataFrame(
 ).reset_index()
 
 
+executive_summary = pd.DataFrame(
+    {
+        "spend_eur": spend_by_source,
+        "conv_plat": conversions_by_source,
+        "conv_recon": reconciled_conversions,
+        "roas": roas_by_source,
+        "roas_ltv": roas_ltv_by_source,
+    }
+).reset_index()
+
+total_row = pd.DataFrame(
+    [
+        {
+            "source": "TOTAL",
+            "spend_eur": spend_by_source.sum(),
+            "conv_plat": conversions_by_source.sum(),
+            "conv_recon": reconciled_conversions.sum(),
+            "roas": global_roas,
+            "roas_ltv": global_roas_ltv,
+        }
+    ]
+)
+executive_summary = pd.concat([executive_summary, total_row], ignore_index=True)
+# logger.info(executive_summary)
+
+
 GOLD_PATH.mkdir(parents=True, exist_ok=True)
 channel_roas.to_parquet(GOLD_PATH / "channel_roas.parquet")
-
 logger.info(f"saved {len(channel_roas)} rows to {GOLD_PATH / 'channel_roas.parquet'}")
+
+GOLD_PATH.mkdir(parents=True, exist_ok=True)
+executive_summary.to_parquet(GOLD_PATH / "executive_summary.parquet")
+logger.info(
+    f"saved {len(channel_roas)} rows to {GOLD_PATH / 'executive_summary.parquet'}"
+)
