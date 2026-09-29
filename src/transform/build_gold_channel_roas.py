@@ -38,27 +38,6 @@ reconciled_conversions = get_reconciled_conversions(
     conversions_by_source, reconciliation_factor
 )
 
-# executive_summary = channel_roas.rename(
-#     columns={"source": "channel", "roas": "roas_first_purchase"}
-# ).drop(columns=["reconciled_revenue", "reconciled_revenue_ltv"])
-
-# total_row = pd.DataFrame(
-#     [
-#         {
-#             "channel": "TOTAL",
-#             "reported_conversions": conversions_by_source.sum(),
-#             "reconciled_conversions": crm_total_conversions,
-#             "spend_eur": crm_total_spend,
-#             "roas_first_purchase": global_roas,
-#             "roas_ltv": global_roas_ltv,
-#         }
-#     ]
-# )
-# # executive_summary = pd.concat([executive_summary, total_row], ignore_index=True)
-
-# # executive_summary.to_parquet(GOLD_PATH / "executive_summary.parquet")
-# # logger.info(f"rows: {len(executive_summary)} columns: {len(executive_summary.columns)}")
-
 source_roas = build_source_roas(reconciled_conversions, crm_sales, unified)
 print(source_roas)
 
