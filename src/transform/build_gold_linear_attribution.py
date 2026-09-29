@@ -31,22 +31,17 @@ credit_by_source = attribution.groupby(["source"])["credit"].sum()
 assert credit_by_source.sum() == len(crm_sales), (
     "Attribution credit does not sum to total CRM sales"
 )
-logger.info(credit_by_source)
-logger.info(credit_by_source.sum())
 
 average_order_value = crm_sales["amount_eur"].mean()
 
 attributed_revenue = credit_by_source * average_order_value
-logger.info(attributed_revenue)
 
 spend_by_source = unified.groupby("source")["spend_eur"].sum()
 roas = attributed_revenue / spend_by_source
-logger.info(f"ROAS: {roas}")
 
 ltv_order_value = average_order_value * LTV_MULTIPLIER
 attributed_revenue_ltv = credit_by_source * ltv_order_value
 roas_ltv = attributed_revenue_ltv / spend_by_source
-logger.info(f"ROAS (LTV): {roas_ltv}")
 
 linear_attribution_roas = pd.DataFrame(
     {
@@ -58,6 +53,13 @@ linear_attribution_roas = pd.DataFrame(
         "roas_ltv": roas_ltv,
     }
 ).reset_index()
+
+for source, credit in credit_by_source.items():
+    logger.info(
+        f"{source}: {credit:.2f} credit, "
+        f"€{attributed_revenue[source]:,.2f} revenue, "
+        f"ROAS {roas[source]:.2f}x, ROAS LTV {roas_ltv[source]:.2f}x"
+    )
 
 GOLD_PATH.mkdir(parents=True, exist_ok=True)
 linear_attribution_roas.to_parquet(GOLD_PATH / "linear_attribution_roas.parquet")
