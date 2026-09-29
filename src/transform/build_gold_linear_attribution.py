@@ -4,6 +4,7 @@ import pandas as pd
 
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir
+from src.utils.roas import build_source_roas
 
 logger = get_logger(Path(__file__).stem)
 
@@ -12,7 +13,6 @@ GOLD_PATH = get_data_dir("gold")
 
 crm_sales = pd.read_parquet(SILVER_PATH / "crm_sales.parquet")
 unified = pd.read_parquet(GOLD_PATH / "unified_campaigns.parquet")
-LTV_MULTIPLIER = 2.3
 
 
 def parse_touchpoints(touchpoints_str):
@@ -32,34 +32,18 @@ assert credit_by_source.sum() == len(crm_sales), (
     "Attribution credit does not sum to total CRM sales"
 )
 
-average_order_value = crm_sales["amount_eur"].mean()
+linear_attribution_roas = build_source_roas(credit_by_source, crm_sales)
 
-attributed_revenue = credit_by_source * average_order_value
-
-spend_by_source = unified.groupby("source")["spend_eur"].sum()
-roas = attributed_revenue / spend_by_source
-
-ltv_order_value = average_order_value * LTV_MULTIPLIER
-attributed_revenue_ltv = credit_by_source * ltv_order_value
-roas_ltv = attributed_revenue_ltv / spend_by_source
-
-linear_attribution_roas = pd.DataFrame(
-    {
-        "credit": credit_by_source,
-        "attributed_revenue": attributed_revenue,
-        "attributed_revenue_ltv": attributed_revenue_ltv,
-        "spend_eur": spend_by_source,
-        "roas": roas,
-        "roas_ltv": roas_ltv,
-    }
-).reset_index()
-
-for source, credit in credit_by_source.items():
+for _, row in linear_attribution_roas.iterrows():
     logger.info(
-        f"{source}: {credit:.2f} credit, "
-        f"€{attributed_revenue[source]:,.2f} revenue, "
-        f"ROAS {roas[source]:.2f}x, ROAS LTV {roas_ltv[source]:.2f}x"
+        f"{row['source']}: {row['credit']:.2f} credit, "
+        f"€{row['attributed_revenue']:,.2f} revenue, "
+        f"ROAS {row['roas']:.2f}x, ROAS LTV {row['roas_ltv']:.2f}x"
     )
+
+logger.info(
+    f"Total credit: {linear_attribution_roas['credit'].sum():.2f} (CRM sales: {len(crm_sales)})"
+)
 
 GOLD_PATH.mkdir(parents=True, exist_ok=True)
 linear_attribution_roas.to_parquet(GOLD_PATH / "linear_attribution_roas.parquet")
