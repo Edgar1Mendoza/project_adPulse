@@ -2,5 +2,6 @@ pandas
 duckdb
 python-dotenv
 pyarrow
+apache-airflow
 
 -e .
