@@ -6,19 +6,25 @@ import pandas as pd
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir, get_source_dir
 
-logger = get_logger(Path(__file__).stem)
 
-FILE_NAME = "crm_ventas.csv"
-SOURCE_DIR = get_source_dir()
-SOURCE_PATH = SOURCE_DIR / "crm_ventas.csv"
-RAW_DIR = get_data_dir("raw") / "csv_crm"
-RAW_PATH = RAW_DIR / FILE_NAME
-RAW_DIR.mkdir(parents=True, exist_ok=True)
+def run():
+    logger = get_logger(Path(__file__).stem)
 
-shutil.copy(SOURCE_PATH, RAW_PATH)
+    FILE_NAME = "crm_ventas.csv"
+    SOURCE_DIR = get_source_dir()
+    SOURCE_PATH = SOURCE_DIR / "crm_ventas.csv"
+    RAW_DIR = get_data_dir("raw") / "csv_crm"
+    RAW_PATH = RAW_DIR / FILE_NAME
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-df = pd.read_csv(RAW_PATH)
+    shutil.copy(SOURCE_PATH, RAW_PATH)
 
-logger.info(f"Rows: {len(df)}")
-logger.info(f"Columns: {len(df.columns)}")
-logger.info(df.dtypes)
+    df = pd.read_csv(RAW_PATH)
+
+    logger.info(f"Rows: {len(df)}")
+    logger.info(f"Columns: {len(df.columns)}")
+    logger.info(df.dtypes)
+
+
+if __name__ == "__main__":
+    run()
