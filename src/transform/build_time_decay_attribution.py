@@ -37,7 +37,7 @@ assert credit_by_source.sum() == len(crm_sales), (
     "Attribution credit does not sum to total CRM sales"
 )
 
-time_dacay_roas = build_source_roas(credit_by_source, crm_sales)
+time_dacay_roas = build_source_roas(credit_by_source, crm_sales, unified)
 
 for _, row in time_dacay_roas.iterrows():
     logger.info(
