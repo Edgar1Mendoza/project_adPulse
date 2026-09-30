@@ -14,16 +14,18 @@ GOLD_PATH = get_data_dir("gold")
 crm_sales = pd.read_parquet(SILVER_PATH / "crm_sales.parquet")
 unified = pd.read_parquet(GOLD_PATH / "unified_campaigns.parquet")
 
-channel_roas = pd.read_parquet(GOLD_PATH / "channel_roas.parquet")
+proportional_roas = pd.read_parquet(
+    GOLD_PATH / "proportional_reconciliation_roas.parquet"
+)
 linear_roas = pd.read_parquet(GOLD_PATH / "linear_attribution_roas.parquet")
 time_decay_roas = pd.read_parquet(GOLD_PATH / "time_decay_attribution_roas.parquet")
 
-channel_roas["method"] = "proportional_reconciliation"
+proportional_roas["method"] = "proportional_reconciliation"
 linear_roas["method"] = "linear_reconciliation"
 time_decay_roas["method"] = "time_decay_reconciliation"
 
 executive_summary = pd.concat(
-    [channel_roas, linear_roas, time_decay_roas], ignore_index=True
+    [proportional_roas, linear_roas, time_decay_roas], ignore_index=True
 )
 
 total_revenue = crm_sales["amount_eur"].sum()
