@@ -27,7 +27,7 @@ with DAG(
     default_args=default_args,
     description="Pipeline semanal PharmaLife: ingesta -> unificacion -> reconciliación -> reporte",
     schedule="0 7 * * 1",
-    start_date=datetime(2024, 1, 1),
+    start_date=datetime(2026, 1, 1),
     catchup=False,
     tags=["pharmalife", "weekly", "production"],
 ) as dag:
