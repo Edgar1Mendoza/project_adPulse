@@ -21,3 +21,8 @@ logs/
 .DS_Store
 .vscode/
 .idea/
+
+# Airflow
+airflow/airflow.cfg
+airflow/airflow.db
+airflow/simple_auth_manager_passwords.json.generated
