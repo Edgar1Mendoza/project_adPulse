@@ -17,14 +17,19 @@ def run():
     crm_sales = pd.read_parquet(SILVER_PATH / "crm_sales.parquet")
     unified = pd.read_parquet(GOLD_PATH / "unified_campaigns.parquet")
 
-    def parse_touchpoints(touchpoints_str):
+    def time_decay_attribution(touchpoints_str, decay_factor=0.5):
         channels = [touchpoint.split(":")[0] for touchpoint in touchpoints_str.split(",")]
-        credit = 1 / len(channels)
-        return [{"source": channel, "credit": credit} for channel in channels]
+        n = len(channels)
+        weights = [decay_factor ** (n - 1 - i) for i in range(n)]
+        total_weight = sum(weights)
+        return [
+            {"source": channel, "credit": weight / total_weight}
+            for channel, weight in zip(channels, weights)
+        ]
 
     attribution_rows = []
     for touchpoint in crm_sales["touchpoints"]:
-        attribution_rows.extend(parse_touchpoints(touchpoint))
+        attribution_rows.extend(time_decay_attribution(touchpoint))
 
     attribution = pd.DataFrame(attribution_rows)
 
@@ -33,9 +38,9 @@ def run():
         "Attribution credit does not sum to total CRM sales"
     )
 
-    linear_attribution_roas = build_source_roas(credit_by_source, crm_sales, unified)
+    time_dacay_roas = build_source_roas(credit_by_source, crm_sales, unified)
 
-    for _, row in linear_attribution_roas.iterrows():
+    for _, row in time_dacay_roas.iterrows():
         logger.info(
             f"{row['source']}: {row['credit']:.2f} credit, "
             f"€{row['attributed_revenue']:,.2f} revenue, "
@@ -43,13 +48,13 @@ def run():
         )
 
     logger.info(
-        f"Total credit: {linear_attribution_roas['credit'].sum():.2f} (CRM sales: {len(crm_sales)})"
+        f"Total credit: {time_dacay_roas['credit'].sum():.2f} (CRM sales: {len(crm_sales)})"
     )
 
     GOLD_PATH.mkdir(parents=True, exist_ok=True)
-    linear_attribution_roas.to_parquet(GOLD_PATH / "linear_attribution_roas.parquet")
+    time_dacay_roas.to_parquet(GOLD_PATH / "time_decay_attribution_roas.parquet")
     logger.info(
-        f"saved {len(linear_attribution_roas)} rows to {GOLD_PATH / 'linear_attribution_roas.parquet'}"
+        f"saved {len(time_dacay_roas)} rows to {GOLD_PATH / 'time_decay_attribution_roas.parquet'}"
     )
 
 
