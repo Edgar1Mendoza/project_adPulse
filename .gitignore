@@ -26,3 +26,6 @@ logs/
 airflow/airflow.cfg
 airflow/airflow.db
 airflow/simple_auth_manager_passwords.json.generated
+airflow/airflow.db-wal
+airflow/airflow.db-shm
+airflow.*
