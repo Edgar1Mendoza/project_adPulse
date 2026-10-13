@@ -44,7 +44,11 @@ def run():
         + list(actions_df.columns)
         + list(cost_per_action_df.columns)
     )
-    df_meta[numeric_cols] = df_meta[numeric_cols].astype(float)
+    df_meta[numeric_cols] = df_meta[numeric_cols].astype("float64")
+
+    df_meta["cost_per_purchase"] = df_meta["cost_per_purchase"].fillna(
+        df_meta["spend"] / df_meta["purchase"]
+    )
 
     logger.info(df_meta.head())
 
