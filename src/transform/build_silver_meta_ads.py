@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.utils.cleaning import strip_whitespace
+from src.utils.cleaning import drop_exact_duplicates, strip_whitespace
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir
 
@@ -49,6 +49,9 @@ def run():
     logger.info(df_meta.head())
 
     df_meta = strip_whitespace(df_meta, columns=["campaign_id", "campaign_name"])
+    df_meta, removed = drop_exact_duplicates(df_meta)
+    if removed > 0:
+        logger.info(f"Removed {removed} exact duplicates rows")
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
     df_meta.to_parquet(SILVER_PATH / "meta_ads.parquet")
