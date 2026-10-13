@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.utils.cleaning import strip_whitespace
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir
 
@@ -23,8 +24,7 @@ def run():
     base_df["date_stop"] = pd.to_datetime(base_df["date_stop"], format="%Y-%m-%d")
 
     actions_list = [
-        {a["action_type"]: a["value"] for a in record.get("actions", [])}
-        for record in records
+        {a["action_type"]: a["value"] for a in record.get("actions", [])} for record in records
     ]
     actions_df = pd.DataFrame(actions_list)
 
@@ -47,6 +47,8 @@ def run():
     df_meta[numeric_cols] = df_meta[numeric_cols].astype(float)
 
     logger.info(df_meta.head())
+
+    df_meta = strip_whitespace(df_meta, columns=["campaign_id", "campaign_name"])
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
     df_meta.to_parquet(SILVER_PATH / "meta_ads.parquet")

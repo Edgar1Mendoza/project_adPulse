@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.utils.cleaning import strip_whitespace
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir
 
@@ -15,6 +16,8 @@ def run():
     df_crm = pd.read_csv(RAW_PATH)
 
     df_crm["sale_date"] = pd.to_datetime(df_crm["sale_date"], format="%Y-%m-%d")
+
+    df_crm = strip_whitespace(df_crm, columns=["sale_id", "customer_id", "touchpoints"])
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
     df_crm.to_parquet(SILVER_PATH / "crm_sales.parquet")

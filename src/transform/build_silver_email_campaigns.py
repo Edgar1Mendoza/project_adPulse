@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.utils.cleaning import strip_whitespace
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir
 
@@ -16,6 +17,8 @@ def run():
 
     df["week_start"] = pd.to_datetime(df["week_start"], format="%Y-%m-%d")
     df["week_end"] = pd.to_datetime(df["week_end"], format="%Y-%m-%d")
+
+    df = strip_whitespace(df, columns=["campaign_name"])
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
     df.to_parquet(SILVER_PATH / "email_campaigns.parquet")
