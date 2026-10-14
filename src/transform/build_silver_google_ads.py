@@ -27,7 +27,7 @@ def run():
         logger.info(f"Removed {removed} future sale_date rows")
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(SILVER_PATH / "google_ads_weekly.parquet")
+    df.to_parquet(SILVER_PATH / "google_ads_weekly.parquet", index=False)
 
     logger.info(f"Rows: {len(df)}")
     logger.info(f"Columns: {len(df.columns)}")

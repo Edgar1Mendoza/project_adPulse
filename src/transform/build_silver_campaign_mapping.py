@@ -50,7 +50,7 @@ def run():
     assert mapping_dupes.sum() == 0, "Duplicate (source, campaign) pairs in campaign mapping"
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
-    mapping_long.to_parquet(SILVER_PATH / "campaign_mapping_long.parquet")
+    mapping_long.to_parquet(SILVER_PATH / "campaign_mapping_long.parquet", index=False)
 
     logger.info(
         f"Saved {len(mapping_long)} rows and {len(mapping_long.columns)} columns to SILVER campaign parquet"
