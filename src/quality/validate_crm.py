@@ -9,6 +9,7 @@ from src.quality.checks import (
     assert_no_nulls,
     assert_positive,
 )
+from src.quality.schema import detect_new_columns
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir
 
@@ -23,6 +24,12 @@ def run():
     assert_columns_present(
         crm_sales, ["sale_id", "customer_id", "amount_eur", "sale_date", "touchpoints"]
     )
+    new_columns = detect_new_columns(
+        crm_sales,
+        expected_columns=["sale_id", "customer_id", "sale_date", "amount_eur", "touchpoints"],
+    )
+    if new_columns:
+        logger.warning(f"Unexpected new columns in crm_sales: {new_columns}")
     assert_no_nulls(crm_sales, columns=["customer_id", "sale_id"])
     assert_no_duplicates(crm_sales, subset=["sale_id"])
     assert_positive(crm_sales, columns=["amount_eur"])
