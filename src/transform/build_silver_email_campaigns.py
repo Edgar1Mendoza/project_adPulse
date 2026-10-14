@@ -29,7 +29,7 @@ def run():
         logger.info(f"Removed {removed_start + removed_end} future sale_date rows")
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(SILVER_PATH / "email_campaigns.parquet")
+    df.to_parquet(SILVER_PATH / "email_campaigns.parquet", index=False)
 
     logger.info(f"Rows: {len(df)}")
     logger.info(f"Columns: {len(df.columns)}")

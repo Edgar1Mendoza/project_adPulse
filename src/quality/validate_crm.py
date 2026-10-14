@@ -15,18 +15,18 @@ from src.utils.paths import get_data_dir
 
 logger = get_logger(Path(__file__).stem)
 
+EXPECTED_COLUMNS = ["sale_id", "customer_id", "amount_eur", "sale_date", "touchpoints"]
+
 
 def run():
     SILVER_PATH = get_data_dir("silver")
     crm_sales = pd.read_parquet(SILVER_PATH / "crm_sales.parquet")
 
     assert_min_rows(crm_sales, min_rows=1)
-    assert_columns_present(
-        crm_sales, ["sale_id", "customer_id", "amount_eur", "sale_date", "touchpoints"]
-    )
+    assert_columns_present(crm_sales, columns=EXPECTED_COLUMNS)
     new_columns = detect_new_columns(
         crm_sales,
-        expected_columns=["sale_id", "customer_id", "sale_date", "amount_eur", "touchpoints"],
+        expected_columns=EXPECTED_COLUMNS,
     )
     if new_columns:
         logger.warning(f"Unexpected new columns in crm_sales: {new_columns}")

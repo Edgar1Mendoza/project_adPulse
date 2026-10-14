@@ -63,7 +63,7 @@ def run():
         logger.info(f"Removed {removed_start + removed_stop} future date_start rows")
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
-    df_meta.to_parquet(SILVER_PATH / "meta_ads.parquet")
+    df_meta.to_parquet(SILVER_PATH / "meta_ads.parquet", index=False)
 
 
 if __name__ == "__main__":
