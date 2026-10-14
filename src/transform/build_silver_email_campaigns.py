@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.utils.cleaning import drop_exact_duplicates, strip_whitespace
+from src.utils.cleaning import drop_exact_duplicates, filter_future_dates, strip_whitespace
 from src.utils.logging_config import get_logger
 from src.utils.paths import get_data_dir
 
@@ -22,6 +22,11 @@ def run():
     df, removed = drop_exact_duplicates(df)
     if removed > 0:
         logger.info(f"Removed {removed} exact duplicates rows")
+
+    df, removed_start = filter_future_dates(df, "week_start")
+    df, removed_end = filter_future_dates(df, "week_end")
+    if removed_start + removed_end > 0:
+        logger.info(f"Removed {removed_start + removed_end} future sale_date rows")
 
     SILVER_PATH.mkdir(parents=True, exist_ok=True)
     df.to_parquet(SILVER_PATH / "email_campaigns.parquet")
