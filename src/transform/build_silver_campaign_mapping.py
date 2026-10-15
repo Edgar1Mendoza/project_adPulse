@@ -13,7 +13,15 @@ def run():
     RAW_PATH = get_data_dir("raw") / "csv_mapping" / "campaign_mapping.csv"
     SILVER_PATH = get_data_dir("silver")
 
-    mapping = pd.read_csv(RAW_PATH)
+    dtype = {
+        "campaign_group": "string",
+        "product_category": "string",
+        "google_name": "string",
+        "meta_name": "string",
+        "email_name": "string",
+    }
+
+    mapping = pd.read_csv(RAW_PATH, dtype=dtype)
     logger.info(
         f"Read {len(mapping)} rows and {len(mapping.columns)} columns from raw campaign mapping"
     )

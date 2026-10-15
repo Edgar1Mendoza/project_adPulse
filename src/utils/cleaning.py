@@ -1,6 +1,20 @@
 import pandas as pd
 
 
+def coerce_numeric(df, columns, dtype):
+    before_nulls = df[columns].isna().sum()
+    df[columns] = pd.to_numeric(df[columns], errors="coerce").astype(dtype)
+    after_nulls = df[columns].isna().sum()
+    return df, after_nulls - before_nulls
+
+
+def coerce_datetime(df, columns, format):
+    before_nulls = df[columns].isna().sum()
+    df[columns] = pd.to_datetime(df[columns], format=format, errors="coerce")
+    after_nulls = df[columns].isna().sum()
+    return df, after_nulls - before_nulls
+
+
 def strip_whitespace(df, columns):
     for column in columns:
         df[column] = df[column].str.strip()
